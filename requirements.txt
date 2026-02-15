@@ -1,6 +1,7 @@
 streamlit==1.54.0
 tensorflow==2.20.0
+numpy>=2.1.0
 pillow
 pandas
-opencv-python-headless
+
 
