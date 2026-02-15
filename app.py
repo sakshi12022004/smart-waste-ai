@@ -100,6 +100,34 @@ if uploaded_file is not None:
         <h3>Dispose in: {bin_type}</h3>
     </div>
     """, unsafe_allow_html=True)
+        
+    prob_df = {
+    "Class": class_labels,
+    "Probability": prediction[0]
+    }
+
+    st.bar_chart(prob_df, x="Class", y="Probability")
+    
+# LIVE CAMERA SECTION
+st.markdown("## 📷 Capture Waste Image")
+
+camera_image = st.camera_input("Take a picture")
+
+if camera_image is not None:
+    img = Image.open(camera_image)
+    st.image(img, caption="Captured Image", width=400)
+
+    img_resized = img.resize((224, 224))
+    img_array = image.img_to_array(img_resized)
+    img_array = np.expand_dims(img_array, axis=0)
+    img_array = preprocess_input(img_array)
+
+    prediction = model.predict(img_array)
+    confidence = float(np.max(prediction))
+    predicted_class = class_labels[np.argmax(prediction)]
+
+    st.success(f"Detected: {predicted_class}")
+    st.info(f"Confidence: {confidence*100:.2f}%")
 
 
 
@@ -109,4 +137,5 @@ prob_df = pd.DataFrame({
 })
 
 st.bar_chart(prob_df.set_index("Category"))
+
 
