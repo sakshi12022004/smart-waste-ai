@@ -58,7 +58,7 @@ Dataset contains images categorized into:
 - Plastic
 - Trash
 
----
+--
 
-##  Project Structure
+
 
