@@ -5,9 +5,7 @@ from PIL import Image
 from tensorflow.keras.models import load_model
 from tensorflow.keras.applications.mobilenet_v2 import preprocess_input
 from tensorflow.keras.preprocessing import image
-import cv2
-import av
-from streamlit_webrtc import webrtc_streamer, VideoProcessorBase
+
 
 # PAGE CONFIG 
 
@@ -104,30 +102,6 @@ if uploaded_file is not None:
     """, unsafe_allow_html=True)
 
 
-#  LIVE CAMERA SECTION
-st.markdown("## 📷 Live Detection")
-
-camera_image = st.camera_input("Take a picture of waste")
-
-if camera_image is not None:
-
-    img = Image.open(camera_image)
-    st.image(img, caption="Captured Image", width=400)
-
-    img_resized = img.resize((224, 224))
-    img_array = image.img_to_array(img_resized)
-    img_array = np.expand_dims(img_array, axis=0)
-    img_array = preprocess_input(img_array)
-
-    prediction = model.predict(img_array, verbose=0)
-    confidence = float(np.max(prediction))
-    predicted_class = class_labels[np.argmax(prediction)]
-    bin_type = get_bin_recommendation(predicted_class)
-
-    st.success(f"Detected: {predicted_class}")
-    st.info(f"Confidence: {confidence*100:.1f}%")
-    st.warning(f"Dispose in: {bin_type}")
-
 
 prob_df = pd.DataFrame({
     "Category": class_labels,
@@ -135,3 +109,4 @@ prob_df = pd.DataFrame({
 })
 
 st.bar_chart(prob_df.set_index("Category"))
+
